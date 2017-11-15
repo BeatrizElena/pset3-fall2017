@@ -16,13 +16,13 @@ bool search(int value, int values[], int n)
 {
     int min = 0; // at index 0
     int max = n - 1; // at last index of array
-    eprintf("%d\n", min);
-    eprintf("%d\n", max);
+    // eprintf("%d\n", min);
+    // eprintf("%d\n", max);
 
     while (min <= max)
     {
         int mid = (min + max) / 2;
-        eprintf("\nmid: %d\n", mid);
+        // eprintf("\nmid: %d\n", mid);
 
         if (value == values[mid])
         {
@@ -31,16 +31,16 @@ bool search(int value, int values[], int n)
         else if (value < values[mid])
         {
             max = mid - 1;
-            eprintf("\nmax: %d", max);
+            // eprintf("\nmax: %d", max);
         }
         else if (value > values[mid])
         {
             min = mid + 1;
-            eprintf("\nmin: %d", min);
+            // eprintf("\nmin: %d", min);
         }
     }
     // needle is not in haystack
-    return false;
+    return 0;
 }
 
 /**
@@ -48,17 +48,22 @@ bool search(int value, int values[], int n)
  */
 void sort(int values[], int n)
 {
-    int swap = 0;
+    int swapCounter;
+    int i;
 
-    for (int i = 0; i < n; i++){
-        if (values[i] > values[i + 1])
+    do
+    {
+        swapCounter = 0;
+        for(i = 0; i < n; i++)
         {
-            int temp = values[i];
-            values[i] = values[i + 1];
-            values[i + 1] = temp;
-            swap++;
-            eprintf("\nswap: %d", swap);
+            if (values[i] > values[i + 1])
+            {
+                int temp = values[i];
+                values[i] = values[i + 1];
+                values[i + 1] = temp;
+                swapCounter++;
+            }
         }
     }
-    return;
+    while(swapCounter != 0);
 }
