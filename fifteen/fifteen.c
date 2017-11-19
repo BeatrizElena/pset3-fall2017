@@ -178,6 +178,14 @@ void init(void)
     {
         board[d - 1][d - 1] = 0;
     }
+
+    if (d % 2 == 0)
+    {
+        // swap 1 and 2
+        int temp = board[d - 1] [d - 2];
+        board[d - 1] [d - 2] = board[d - 1][d - 3];
+        board[d - 1][d - 3] = temp;
+    }
 }
 
 /**
@@ -203,6 +211,16 @@ void draw(void)
             {
                 printf("_\t");
                 // printf("%2i", board[i][j]); hint from video, not sure how/when to use. Here, it prints a zero.
+            }
+
+            // swap 1 and 2 for even boards
+            int one = board[d - 1] [d - 2];
+            int two = board[d - 1] [d - 3];
+            if (d % 2 == 0)
+            {
+                int temp = one;
+                one = two;
+                two = temp;
             }
         }
         printf("\n");
@@ -260,6 +278,17 @@ bool move(int tile)
  */
 bool won(void)
 {
-    // TODO
+    int maxTile = d * d - 1;
+
+    for (int i = 0; i < d; i++)
+    {
+        for (int j = 0; j < d; j++)
+        {
+            if ((board[0][0] == 1) && (board[d -1][d -2] == maxTile) && (board[d - 1][d - 1] == 0))
+            {
+                return true;
+            }
+        }
+    }
     return false;
 }
