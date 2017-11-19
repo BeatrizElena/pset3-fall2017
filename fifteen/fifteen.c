@@ -96,35 +96,35 @@ int main(int argc, string argv[])
         }
         fflush(file);
 
-        // check for win
+    //     // check for win
         if (won())
         {
             printf("ftw!\n");
             break;
         }
 
-        // prompt for move
+    //     // prompt for move
         printf("Tile to move: ");
         int tile = get_int();
 
-        // quit if user inputs 0 (for testing)
+    //     // quit if user inputs 0 (for testing)
         if (tile == 0)
         {
             break;
         }
 
-        // log move (for testing)
+    //     // log move (for testing)
         fprintf(file, "%i\n", tile);
         fflush(file);
 
-        // move if possible, else report illegality
+    //     // move if possible, else report illegality
         if (!move(tile))
         {
             printf("\nIllegal move.\n");
             usleep(500000);
         }
 
-        // sleep thread for animation's sake
+    //     // sleep thread for animation's sake
         usleep(500000);
     }
 
@@ -161,15 +161,22 @@ void greet(void)
 void init(void)
 {
     int maxTile = d * d - 1;
+    // init board, starting at maxTile down to 1.
+    // for each row
     for (int i = 0; i < d; i++)
     {
+        // for each column
         for (int j = 0; j < d; j++)
         {
-            // if statement for when d is even , swap 2 and 1
-            maxTile = board[i][j];
+            // set maxTile to the first tile (board[0][0]). Keep decreasing maxTile on each run and assigning it to the next tile.
+            board[i][j] = maxTile;
             maxTile--;
-            printf("%d", maxTile); // temp printf
         }
+    }
+    // init blank tile
+    if (board[d - 1][d - 1] == 0)
+    {
+        board[d - 1][d - 1] = 0;
     }
 }
 
@@ -178,8 +185,30 @@ void init(void)
  */
 void draw(void)
 {
-    // TODO
-}
+    int maxTile = d * d - 1;
+    // eprintf("%i\n", maxTile);
+    for (int i = 0; i < d; i++)
+    {
+        for (int j = 0; j < d; j++)
+        {
+            if (board[i][j] >= 1)
+            {
+                printf("%i\t", board[i][j]);
+            }
+            maxTile--;
+            // eprintf("%i\n", maxTile);
+
+            // draw blank tile
+            if (board[i][j] == 0)
+            {
+                printf("_\t");
+                // printf("%2i", board[i][j]); hint from video, not sure how/when to use. Here, it prints a zero.
+            }
+        }
+        printf("\n");
+    }
+    printf("\n");
+    }
 
 /**
  * If tile borders empty space, moves tile and returns true, else
@@ -187,7 +216,41 @@ void draw(void)
  */
 bool move(int tile)
 {
-    // TODO
+    int tileRow = d - 1;
+    int tileCol = d - 1;
+    int blankRow = 0;
+    int blankCol = 0;
+    int blank = 0;
+
+    // Loops check if user-input tile is in the array. They also keep track of where blank tile is.
+    for (int i = 0; i < d; i++)
+    {
+        for (int j = 0; j < d; j++)
+        {
+            // tile provided by user
+            if (board[i][j] == tile)
+            {
+                tileRow = i;
+                tileCol = j;
+            }
+            if (board[i][j] == 0)
+            {
+                blankRow = i;
+                blankCol = j;
+            }
+        }
+    }
+    // check if user-input tile ([tileRow][tileCol) is above, below, left or right of the blank tile
+    if ((tileRow == blankRow + 1 && tileCol == blankCol) ||
+        (tileRow == blankRow - 1 && tileCol == blankCol) ||
+        (tileRow ==  blankRow && tileCol == blankCol - 1) ||
+        (tileRow == blankRow && tileCol == blankCol + 1))
+    {
+        //swap user's tile with blank tile
+        board[tileRow][tileCol] = blank;
+        board[blankRow][blankCol] = tile;
+        return true;
+    }
     return false;
 }
 
